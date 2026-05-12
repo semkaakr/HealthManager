@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HealthManager
@@ -30,33 +23,57 @@ namespace HealthManager
             activityTypeLabel = new Label
             {
                 Text = "Тип активности:",
-                Location = new System.Drawing.Point(10, 10)
+                Location = new System.Drawing.Point(10, 7),
+                Name = "activityTypeLabel"  // Добавлено
             };
             activityTypeTextBox = new TextBox
             {
                 Location = new System.Drawing.Point(10, 30),
-                Size = new System.Drawing.Size(200, 20)
+                Size = new System.Drawing.Size(200, 20),
+                AutoSize = false,
+                Name = "activityTypeTextBox"  // Добавлено
             };
+
             durationLabel = new Label
             {
                 Text = "Продолжительность (минут):",
-                Location = new System.Drawing.Point(10, 55)
+                Location = new System.Drawing.Point(10, 55),
+                Size = new System.Drawing.Size(200, 20),
+                AutoSize = false,
+                Name = "durationLabel"  // Добавлено
             };
+
             durationTextBox = new TextBox
             {
                 Location = new System.Drawing.Point(10, 75),
-                Size = new System.Drawing.Size(200, 20)
+                Size = new System.Drawing.Size(200, 20),
+                Name = "durationTextBox"  // Добавлено
             };
+
             var okButton = new Button
             {
                 Text = "OK",
                 Location = new System.Drawing.Point(10, 100),
-                Size = new System.Drawing.Size(80, 25)
+                Size = new System.Drawing.Size(80, 25),
+                Name = "okButton"  // Добавлено
             };
             okButton.Click += (sender, e) =>
             {
+                // Добавлена проверка на отрицательное значение
                 if (decimal.TryParse(durationTextBox.Text, out decimal duration))
                 {
+                    if (duration < 0)
+                    {
+                        MessageBox.Show("Продолжительность не может быть отрицательной.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(activityTypeTextBox.Text))
+                    {
+                        MessageBox.Show("Пожалуйста, введите тип активности.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     ActivityType = activityTypeTextBox.Text;
                     Duration = duration;
                     DialogResult = DialogResult.OK;
@@ -64,9 +81,12 @@ namespace HealthManager
                 }
                 else
                 {
-                    MessageBox.Show("Пожалуйста, введите корректное значение продолжительности.");
+                    MessageBox.Show("Пожалуйста, введите корректное значение продолжительности.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
+            activityTypeTextBox.Name = "activityTypeTextBox";
+            durationTextBox.Name = "durationTextBox";
+            okButton.Name = "okButton";
             var cancelButton = new Button
             {
                 Text = "Отмена",
@@ -86,5 +106,4 @@ namespace HealthManager
             this.Controls.Add(cancelButton);
         }
     }
-
 }
